@@ -1,0 +1,38 @@
+[
+  {
+    "id": "u001",
+    "name": "Alex Johnson",
+    "email": "citizen@example.com",
+    "role": "citizen",
+    "badgeNumber": "",
+    "department": "",
+    "imagePath": "assets/images/user1.png"
+  },
+  {
+    "id": "u002",
+    "name": "Sarah Williams",
+    "email": "sarah@example.com",
+    "role": "citizen",
+    "badgeNumber": "",
+    "department": "",
+    "imagePath": "assets/images/user2.png"
+  },
+  {
+    "id": "u003",
+    "name": "Officer Michael Davis",
+    "email": "officer@example.com",
+    "role": "officer",
+    "badgeNumber": "PD-5678",
+    "department": "Criminal Investigation Division",
+    "imagePath": "assets/images/officer1.png"
+  },
+  {
+    "id": "u004",
+    "name": "Captain Jennifer Wilson",
+    "email": "captain@example.com",
+    "role": "admin",
+    "badgeNumber": "PD-1234",
+    "department": "Police Headquarters",
+    "imagePath": "assets/images/officer2.png"
+  }
+]

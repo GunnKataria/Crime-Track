@@ -1,0 +1,79 @@
+[
+  {
+    "id": "e001",
+    "crimeId": "c001",
+    "description": "CCTV footage from mall security showing the suspect taking the phone",
+    "type": "video",
+    "status": "analyzed",
+    "collectedAt": "2023-05-15T16:30:00.000Z",
+    "collectedBy": "Officer Johnson",
+    "storageLocation": "Digital Evidence Server",
+    "imagePath": "assets/images/evidence_video.png"
+  },
+  {
+    "id": "e002",
+    "crimeId": "c001",
+    "description": "Fingerprints lifted from the table where the phone was last seen",
+    "type": "physical",
+    "status": "analyzed",
+    "collectedAt": "2023-05-15T17:00:00.000Z",
+    "collectedBy": "Officer Smith",
+    "storageLocation": "Evidence Locker B12",
+    "imagePath": "assets/images/evidence_fingerprint.png"
+  },
+  {
+    "id": "e003",
+    "crimeId": "c002",
+    "description": "Photos of the vandalized park benches and graffiti",
+    "type": "photo",
+    "status": "collected",
+    "collectedAt": "2023-05-21T09:15:00.000Z",
+    "collectedBy": "Officer Davis",
+    "storageLocation": "Digital Evidence Server",
+    "imagePath": "assets/images/evidence_photo.png"
+  },
+  {
+    "id": "e004",
+    "crimeId": "c003",
+    "description": "Victim's torn shirt with possible DNA evidence from the attacker",
+    "type": "physical",
+    "status": "stored",
+    "collectedAt": "2023-05-18T03:30:00.000Z",
+    "collectedBy": "Officer Wilson",
+    "storageLocation": "Evidence Locker C05",
+    "imagePath": "assets/images/evidence_physical.png"
+  },
+  {
+    "id": "e005",
+    "crimeId": "c004",
+    "description": "Photos of the forced entry point (back door)",
+    "type": "photo",
+    "status": "analyzed",
+    "collectedAt": "2023-05-12T11:00:00.000Z",
+    "collectedBy": "Officer Johnson",
+    "storageLocation": "Digital Evidence Server",
+    "imagePath": "assets/images/evidence_door.png"
+  },
+  {
+    "id": "e006",
+    "crimeId": "c004",
+    "description": "Tool marks from the break-in, possibly from a crowbar",
+    "type": "physical",
+    "status": "analyzed",
+    "collectedAt": "2023-05-12T11:30:00.000Z",
+    "collectedBy": "Officer Johnson",
+    "storageLocation": "Evidence Locker A08",
+    "imagePath": "assets/images/evidence_toolmarks.png"
+  },
+  {
+    "id": "e007",
+    "crimeId": "c005",
+    "description": "Credit card statements showing unauthorized transactions",
+    "type": "document",
+    "status": "collected",
+    "collectedAt": "2023-05-08T15:00:00.000Z",
+    "collectedBy": "Officer Smith",
+    "storageLocation": "Digital Evidence Server",
+    "imagePath": "assets/images/evidence_document.png"
+  }
+]

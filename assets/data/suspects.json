@@ -1,0 +1,29 @@
+[
+  {
+    "id": "s001",
+    "name": "Unknown Suspect",
+    "description": "Young male, approximately 18-25 years old, wearing a red hoodie and jeans. Medium build with short dark hair.",
+    "status": "wanted",
+    "relatedCrimeIds": ["c001"],
+    "criminalHistory": "None identified yet",
+    "imagePath": "assets/images/suspect1.png"
+  },
+  {
+    "id": "s002",
+    "name": "Mike Anderson",
+    "description": "Male, 30-35 years old, with a distinctive snake tattoo on the left side of his neck. Approximately 6'2\" tall with a muscular build.",
+    "status": "in custody",
+    "relatedCrimeIds": ["c003"],
+    "criminalHistory": "Previous arrests for assault and robbery",
+    "imagePath": "assets/images/suspect2.png"
+  },
+  {
+    "id": "s003",
+    "name": "James Wilson",
+    "description": "Male, 25-30 years old, with a scar on his right cheek. Known to operate in the Oak Street area.",
+    "status": "cleared",
+    "relatedCrimeIds": ["c004"],
+    "criminalHistory": "Multiple burglary convictions",
+    "imagePath": "assets/images/suspect3.png"
+  }
+]
