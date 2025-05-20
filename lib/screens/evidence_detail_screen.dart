@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:crime_management_system/models/evidence.dart';
 import 'package:crime_management_system/providers/evidence_provider.dart';
 import 'package:crime_management_system/providers/auth_provider.dart';
+import 'package:crime_management_system/widgets/file_preview_widget.dart';
 import 'package:crime_management_system/screens/edit_evidence_screen.dart';
 import 'package:intl/intl.dart';
 
@@ -30,7 +30,7 @@ class EvidenceDetailScreen extends ConsumerWidget {
       );
     }
     
-    final dateFormat = DateFormat('MMMM d, yyyy');
+    final dateFormat = DateFormat('MMMM d, yyyy • h:mm a');
     
     return Scaffold(
       appBar: AppBar(
@@ -55,46 +55,58 @@ class EvidenceDetailScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Evidence header
+            // Evidence file preview
+            if (evidence.imagePath != null && evidence.imagePath!.isNotEmpty) ...[
+              const Text(
+                'Evidence File',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              FilePreviewWidget(
+                filePath: evidence.imagePath,
+                fileType: evidence.fileType,
+                fileName: evidence.fileName,
+                height: 300,
+              ),
+              const SizedBox(height: 24),
+            ],
+            
+            // Evidence details
+            const Text(
+              'Evidence Information',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (evidence.imagePath != null) ...[
-                      Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            evidence.imagePath!,
-                            width: double.infinity,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ] else ...[
-                      Center(
-                        child: Container(
-                          width: double.infinity,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            _getEvidenceTypeIcon(evidence.type),
-                            size: 64,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
                     Row(
                       children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: _getTypeColor(evidence.type),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            evidence.type.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
@@ -107,21 +119,6 @@ class EvidenceDetailScreen extends ConsumerWidget {
                               color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            evidence.type.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.grey[800],
-                              fontSize: 12,
                             ),
                           ),
                         ),
@@ -142,140 +139,162 @@ class EvidenceDetailScreen extends ConsumerWidget {
                         fontSize: 16,
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Collection details
-            const Text(
-              'Collection Details',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Collected By',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(evidence.collectedBy),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Collection Date',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(dateFormat.format(evidence.collectedAt)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 16),
                     const Text(
-                      'Storage Location',
+                      'Collection Details',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(evidence.storageLocation),
-                  ],
-                ),
-              ),
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Case information
-            const Text(
-              'Case Information',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Related Case',
-                      style: TextStyle(
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    ListTile(
-                      leading: const Icon(Icons.folder),
-                      title: Text('Case ID: ${evidence.crimeId}'),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () {
-                        // Navigate to case detail screen
-                      },
-                    ),
+                    _buildDetailRow('Collected By', evidence.collectedBy),
+                    _buildDetailRow('Collected On', dateFormat.format(evidence.collectedAt)),
+                    _buildDetailRow('Storage Location', evidence.storageLocation),
+                    if (evidence.fileName != null)
+                      _buildDetailRow('File Name', evidence.fileName!),
+                    _buildDetailRow('Evidence ID', evidence.id),
+                    _buildDetailRow('Related Case ID', evidence.crimeId),
                   ],
                 ),
               ),
             ),
+            
+            const SizedBox(height: 24),
+            
+            // Actions for officers
+            if (isOfficer) ...[
+              const Text(
+                'Evidence Actions',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          labelText: 'Update Status',
+                          border: OutlineInputBorder(),
+                        ),
+                        value: evidence.status,
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'collected',
+                            child: Text('Collected'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'processing',
+                            child: Text('Processing'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'analyzed',
+                            child: Text('Analyzed'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'archived',
+                            child: Text('Archived'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            final updatedEvidence = evidence.copyWith(status: value);
+                            ref.read(evidenceProvider.notifier).updateEvidence(updatedEvidence);
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              icon: const Icon(Icons.edit),
+                              label: const Text('Edit Evidence'),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditEvidenceScreen(evidenceId: evidence.id),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
-  
-  IconData _getEvidenceTypeIcon(String type) {
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 140,
+            child: Text(
+              '$label:',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getTypeColor(String type) {
     switch (type.toLowerCase()) {
       case 'photo':
-        return Icons.photo;
+        return Colors.blue;
       case 'video':
-        return Icons.videocam;
+        return Colors.red;
       case 'document':
-        return Icons.description;
+        return Colors.orange;
       case 'physical':
-        return Icons.inventory;
+        return Colors.green;
       case 'audio':
-        return Icons.mic;
+        return Colors.purple;
       default:
-        return Icons.folder;
+        return Colors.grey;
     }
   }
-  
+
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'collected':
-        return Colors.blue;
-      case 'analyzed':
-        return Colors.orange;
-      case 'stored':
         return Colors.green;
+      case 'processing':
+        return Colors.orange;
+      case 'analyzed':
+        return Colors.blue;
+      case 'archived':
+        return Colors.grey;
       default:
         return Colors.grey;
     }

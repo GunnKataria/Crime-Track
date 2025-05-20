@@ -19,15 +19,40 @@ dependencies:
   uuid: ^3.0.7
   intl: ^0.19.0
   fl_chart: ^0.65.0
-  flutter_local_notifications: ^14.1.1
+  image_picker: ^0.8.7+5
+  file_picker: ^10.1.9
+  path: ^1.8.3
+  open_file: ^3.3.2
+  flutter_pdfview: ^1.3.1
+  permission_handler: ^12.0.0+1
+  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.1
+  flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/
-    - assets/data/
+    - assets/images/evidence_document.png
+    - assets/images/evidence_door.png
+    - assets/images/evidence_fingerprint.png
+    - assets/images/evidence_photo.png
+    - assets/images/evidence_physical.png
+    - assets/images/evidence_toolmarks.png
+    - assets/images/evidence_video.png
+    - assets/images/logo.png
+    - assets/images/heatmap_placeholder.png
+    - assets/images/officer1.png
+    - assets/images/officer2.png
+    - assets/images/suspect1.png
+    - assets/images/suspect2.png
+    - assets/images/suspect3.png
+    - assets/images/user1.png
+    - assets/images/user2.png
+    - assets/data/crimes.json
+    - assets/data/evidences.json
+    - assets/data/witnesses.json
+    - assets/data/suspects.json
+    - assets/data/users.json

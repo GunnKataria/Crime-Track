@@ -1,175 +1,178 @@
 import 'package:flutter/material.dart';
 import 'package:crime_management_system/models/evidence.dart';
+import 'package:crime_management_system/widgets/file_preview_widget.dart';
 import 'package:intl/intl.dart';
 
 class EvidenceCard extends StatelessWidget {
   final Evidence evidence;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const EvidenceCard({
     Key? key,
     required this.evidence,
-    required this.onTap,
+    this.onTap,
   }) : super(key: key);
 
-  IconData _getEvidenceTypeIcon(String type) {
+  @override
+  Widget build(BuildContext context) {
+    final dateFormat = DateFormat('MMM d, yyyy • h:mm a');
+    
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Display the evidence file if available
+            if (evidence.imagePath != null && evidence.imagePath!.isNotEmpty)
+              FilePreviewWidget(
+                filePath: evidence.imagePath,
+                fileType: evidence.fileType,
+                fileName: evidence.fileName,
+                height: 180,
+              ),
+            
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _getTypeColor(evidence.type),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          evidence.type.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(evidence.status),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          evidence.status.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    evidence.description,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.person,
+                        size: 16,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Collected by: ${evidence.collectedBy}',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time,
+                        size: 16,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        dateFormat.format(evidence.collectedAt),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 16,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Storage: ${evidence.storageLocation}',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getTypeColor(String type) {
     switch (type.toLowerCase()) {
       case 'photo':
-        return Icons.photo;
+        return Colors.blue;
       case 'video':
-        return Icons.videocam;
+        return Colors.red;
       case 'document':
-        return Icons.description;
+        return Colors.orange;
       case 'physical':
-        return Icons.inventory;
+        return Colors.green;
       case 'audio':
-        return Icons.mic;
+        return Colors.purple;
       default:
-        return Icons.folder;
+        return Colors.grey;
     }
   }
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'collected':
-        return Colors.blue;
-      case 'analyzed':
-        return Colors.orange;
-      case 'stored':
         return Colors.green;
+      case 'processing':
+        return Colors.orange;
+      case 'analyzed':
+        return Colors.blue;
+      case 'archived':
+        return Colors.grey;
       default:
         return Colors.grey;
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final dateFormat = DateFormat('MMM d, yyyy');
-    
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: evidence.imagePath != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          evidence.imagePath!,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : Icon(
-                        _getEvidenceTypeIcon(evidence.type),
-                        size: 32,
-                        color: Colors.grey[600],
-                      ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: _getStatusColor(evidence.status),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            evidence.status.toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            evidence.type.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.grey[800],
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      evidence.description,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          size: 14,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Collected by: ${evidence.collectedBy}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 14,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Date: ${dateFormat.format(evidence.collectedAt)}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                color: Colors.grey[400],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:crime_management_system/models/suspect.dart';
 import 'package:crime_management_system/providers/suspect_provider.dart';
 
 class EditSuspectScreen extends ConsumerStatefulWidget {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:crime_management_system/models/crime.dart';
 import 'package:crime_management_system/providers/crime_provider.dart';
 import 'package:crime_management_system/providers/evidence_provider.dart';
 import 'package:crime_management_system/providers/auth_provider.dart';
 import 'package:crime_management_system/widgets/evidence_card.dart';
+import 'package:crime_management_system/screens/evidence_detail_screen.dart';
 import 'package:intl/intl.dart';
 
 class CaseVerificationScreen extends ConsumerStatefulWidget {
@@ -254,7 +254,12 @@ class _CaseVerificationScreenState extends ConsumerState<CaseVerificationScreen>
                   return EvidenceCard(
                     evidence: evidences[index],
                     onTap: () {
-                      // Navigate to evidence detail screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EvidenceDetailScreen(evidenceId: evidences[index].id),
+                        ),
+                      );
                     },
                   );
                 },

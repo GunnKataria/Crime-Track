@@ -5,7 +5,14 @@ import 'package:crime_management_system/models/evidence.dart';
 import 'package:crime_management_system/providers/crime_provider.dart';
 import 'package:crime_management_system/providers/evidence_provider.dart';
 import 'package:crime_management_system/providers/auth_provider.dart';
+import 'package:crime_management_system/widgets/file_preview_widget.dart';
 import 'package:uuid/uuid.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as path;
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ReportCrimeScreen extends ConsumerStatefulWidget {
   const ReportCrimeScreen({Key? key}) : super(key: key);
@@ -29,6 +36,11 @@ class _ReportCrimeScreenState extends ConsumerState<ReportCrimeScreen> {
   
   bool _isSubmitting = false;
   bool _hasEvidence = false;
+  
+  // File upload related variables
+  String? _selectedFilePath;
+  String? _selectedFileName;
+  String? _selectedFileType;
   
   final List<String> _crimeTypes = [
     'theft',
@@ -85,12 +97,130 @@ class _ReportCrimeScreenState extends ConsumerState<ReportCrimeScreen> {
     }
   }
   
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final status = await Permission.photos.request();
+      if (status.isGranted) {
+        final picker = ImagePicker();
+        final pickedFile = await picker.pickImage(
+          source: source,
+          maxWidth: 1800,
+          maxHeight: 1800,
+        );
+        
+        if (pickedFile != null) {
+          // Copy the file to app's documents directory for persistence
+          final appDir = await getApplicationDocumentsDirectory();
+          final fileName = path.basename(pickedFile.path);
+          final savedImage = await File(pickedFile.path).copy('${appDir.path}/$fileName');
+          
+          setState(() {
+            _selectedFilePath = savedImage.path;
+            _selectedFileName = fileName;
+            _selectedFileType = 'image';
+            _hasEvidence = true;
+          });
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Permission to access photos denied')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking image: $e')),
+      );
+    }
+  }
+  
+  Future<void> _pickFile() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+      );
+      
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        
+        if (file.path != null) {
+          // Copy the file to app's documents directory for persistence
+          final appDir = await getApplicationDocumentsDirectory();
+          final fileName = file.name;
+          final savedFile = await File(file.path!).copy('${appDir.path}/$fileName');
+          
+          String fileType = 'document';
+          final extension = path.extension(fileName).toLowerCase();
+          
+          if (['.jpg', '.jpeg', '.png', '.gif'].contains(extension)) {
+            fileType = 'image';
+          } else if (['.mp4', '.mov', '.avi'].contains(extension)) {
+            fileType = 'video';
+          } else if (['.mp3', '.wav', '.aac'].contains(extension)) {
+            fileType = 'audio';
+          } else if (['.pdf', '.doc', '.docx', '.txt'].contains(extension)) {
+            fileType = 'document';
+          }
+          
+          setState(() {
+            _selectedFilePath = savedFile.path;
+            _selectedFileName = fileName;
+            _selectedFileType = fileType;
+            _hasEvidence = true;
+          });
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking file: $e')),
+      );
+    }
+  }
+  
+  void _showFilePickerOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Take a Photo'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Choose from Gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.attach_file),
+                title: const Text('Pick a Document'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickFile();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  
   Future<void> _submitReport() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
     
-    if (!_hasEvidence) {
+    if (!_hasEvidence || _selectedFilePath == null) {
       _showNoEvidenceDialog();
       return;
     }
@@ -142,7 +272,7 @@ class _ReportCrimeScreenState extends ConsumerState<ReportCrimeScreen> {
       );
       
       // Create the evidence
-      if (_hasEvidence && _evidenceDescriptionController.text.isNotEmpty) {
+      if (_hasEvidence && _evidenceDescriptionController.text.isNotEmpty && _selectedFilePath != null) {
         final evidenceId = const Uuid().v4();
         final evidence = Evidence(
           id: evidenceId,
@@ -153,7 +283,9 @@ class _ReportCrimeScreenState extends ConsumerState<ReportCrimeScreen> {
           collectedAt: DateTime.now(),
           collectedBy: user.name,
           storageLocation: 'Citizen Submission',
-          imagePath: null, // Would be set from image picker in a real app
+          imagePath: _selectedFilePath,
+          fileType: _selectedFileType,
+          fileName: _selectedFileName,
         );
         
         // Add evidence
@@ -358,6 +490,11 @@ class _ReportCrimeScreenState extends ConsumerState<ReportCrimeScreen> {
                 onChanged: (value) {
                   setState(() {
                     _hasEvidence = value;
+                    if (!value) {
+                      _selectedFilePath = null;
+                      _selectedFileName = null;
+                      _selectedFileType = null;
+                    }
                   });
                 },
               ),
@@ -400,18 +537,96 @@ class _ReportCrimeScreenState extends ConsumerState<ReportCrimeScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // In a real app, this would open an image picker or file picker
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('File upload would be implemented in a real app')),
-                    );
-                  },
-                  icon: const Icon(Icons.upload_file),
-                  label: const Text('Upload Evidence File'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  ),
+                
+                // File upload section
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Upload Evidence File',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (_selectedFilePath != null) ...[
+                      FilePreviewWidget(
+                        filePath: _selectedFilePath,
+                        fileType: _selectedFileType,
+                        fileName: _selectedFileName,
+                        height: 200,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton.icon(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            label: const Text('Remove', style: TextStyle(color: Colors.red)),
+                            onPressed: () {
+                              setState(() {
+                                _selectedFilePath = null;
+                                _selectedFileName = null;
+                                _selectedFileType = null;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ] else ...[
+                      Container(
+                        width: double.infinity,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child: InkWell(
+                          onTap: _showFilePickerOptions,
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.upload_file,
+                                size: 48,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'Tap to upload evidence file',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                'Photos, videos, documents, etc.',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: _showFilePickerOptions,
+                        icon: const Icon(Icons.upload_file),
+                        label: Text(_selectedFilePath == null ? 'Upload Evidence File' : 'Change File'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
               

@@ -83,8 +83,8 @@
     "evidenceIds": ["e007"],
     "witnessIds": [],
     "suspectIds": [],
-    "latitude": 0,
-    "longitude": 0,
+    "latitude": 0.0,
+    "longitude": 0.0,
     "isAnonymous": false,
     "createdAt": "2023-05-08T14:20:00.000Z",
     "assignedOfficer": ""

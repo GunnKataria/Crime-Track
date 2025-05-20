@@ -2,12 +2,14 @@ class Evidence {
   final String id;
   final String crimeId;
   final String description;
-  final String type; // photo, video, document, physical
-  final String status; // collected, analyzed, stored
+  final String type;
+  final String status;
   final DateTime collectedAt;
   final String collectedBy;
   final String storageLocation;
-  final String? imagePath;
+  final String? imagePath; // Local path to the image/file
+  final String? fileType; // Type of file (image, pdf, doc, etc.)
+  final String? fileName; // Name of the file
 
   Evidence({
     required this.id,
@@ -19,6 +21,8 @@ class Evidence {
     required this.collectedBy,
     required this.storageLocation,
     this.imagePath,
+    this.fileType,
+    this.fileName,
   });
 
   factory Evidence.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,8 @@ class Evidence {
       collectedBy: json['collectedBy'],
       storageLocation: json['storageLocation'],
       imagePath: json['imagePath'],
+      fileType: json['fileType'],
+      fileName: json['fileName'],
     );
   }
 
@@ -46,6 +52,8 @@ class Evidence {
       'collectedBy': collectedBy,
       'storageLocation': storageLocation,
       'imagePath': imagePath,
+      'fileType': fileType,
+      'fileName': fileName,
     };
   }
 
@@ -59,6 +67,8 @@ class Evidence {
     String? collectedBy,
     String? storageLocation,
     String? imagePath,
+    String? fileType,
+    String? fileName,
   }) {
     return Evidence(
       id: id ?? this.id,
@@ -70,6 +80,8 @@ class Evidence {
       collectedBy: collectedBy ?? this.collectedBy,
       storageLocation: storageLocation ?? this.storageLocation,
       imagePath: imagePath ?? this.imagePath,
+      fileType: fileType ?? this.fileType,
+      fileName: fileName ?? this.fileName,
     );
   }
 }

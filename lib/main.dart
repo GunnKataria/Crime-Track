@@ -3,8 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:crime_management_system/theme/theme_provider.dart';
 import 'package:crime_management_system/screens/home_screen.dart';
+import 'package:crime_management_system/services/json_storage_service.dart'; // Add this import
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // ✅ Initialize JSON data from assets
+  await JsonStorageService().initializeData();
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -18,7 +24,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
-    
+
     return MaterialApp(
       title: 'CrimeTrack',
       debugShowCheckedModeBanner: false,

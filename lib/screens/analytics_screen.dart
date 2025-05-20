@@ -120,9 +120,9 @@ class AnalyticsScreen extends ConsumerWidget {
                       height: 250,
                       child: LineChart(
                         LineChartData(
-                          gridData: FlGridData(show: true),
+                          gridData: const FlGridData(show: true),
                           titlesData: FlTitlesData(
-                            leftTitles: AxisTitles(
+                            leftTitles: const AxisTitles(
                               sideTitles: SideTitles(
                                 showTitles: true,
                                 reservedSize: 30,
@@ -147,10 +147,10 @@ class AnalyticsScreen extends ConsumerWidget {
                                 reservedSize: 30,
                               ),
                             ),
-                            rightTitles: AxisTitles(
+                            rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
-                            topTitles: AxisTitles(
+                            topTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
                           ),
@@ -167,7 +167,7 @@ class AnalyticsScreen extends ConsumerWidget {
                               color: Colors.blue,
                               barWidth: 4,
                               isStrokeCapRound: true,
-                              dotData: FlDotData(show: true),
+                              dotData: const FlDotData(show: true),
                               belowBarData: BarAreaData(
                                 show: true,
                                 color: Colors.blue.withOpacity(0.2),
@@ -207,7 +207,7 @@ class AnalyticsScreen extends ConsumerWidget {
                           maxY: crimeTypes.values.fold(0, (max, value) => value > max ? value : max).toDouble() + 2,
                           barTouchData: BarTouchData(enabled: false),
                           titlesData: FlTitlesData(
-                            leftTitles: AxisTitles(
+                            leftTitles: const AxisTitles(
                               sideTitles: SideTitles(
                                 showTitles: true,
                                 reservedSize: 30,
@@ -232,10 +232,10 @@ class AnalyticsScreen extends ConsumerWidget {
                                 reservedSize: 30,
                               ),
                             ),
-                            rightTitles: AxisTitles(
+                            rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
-                            topTitles: AxisTitles(
+                            topTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
                           ),
@@ -286,7 +286,7 @@ class AnalyticsScreen extends ConsumerWidget {
                       value: totalCrimes > 0 ? closedCrimes / totalCrimes : 0,
                       minHeight: 20,
                       backgroundColor: Colors.grey[300],
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
                     ),
                     const SizedBox(height: 8),
                     Text(

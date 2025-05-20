@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:crime_management_system/models/evidence.dart';
 import 'package:crime_management_system/providers/evidence_provider.dart';
 import 'package:intl/intl.dart';
 
