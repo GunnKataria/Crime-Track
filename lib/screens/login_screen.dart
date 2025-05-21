@@ -156,7 +156,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(height: 16),
                       TextButton(
                         onPressed: () {
-                          // For demo purposes, pre-fill with demo credentials
+                          
                           _emailController.text = 'officer@example.com';
                           _passwordController.text = 'password';
                         },

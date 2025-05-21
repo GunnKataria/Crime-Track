@@ -38,10 +38,10 @@ class _EditSuspectScreenState extends ConsumerState<EditSuspectScreen> {
     _descriptionController = TextEditingController();
     _criminalHistoryController = TextEditingController();
     
-    // Default values that will be overridden when data loads
+    
     _selectedStatus = 'wanted';
     
-    // Load suspect data
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadSuspectData();
     });

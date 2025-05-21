@@ -39,11 +39,11 @@ class _EditWitnessScreenState extends ConsumerState<EditWitnessScreen> {
     _contactInfoController = TextEditingController();
     _statementController = TextEditingController();
     
-    // Default values that will be overridden when data loads
+    
     _selectedCredibility = 'medium';
     _isAnonymous = false;
     
-    // Load witness data
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadWitnessData();
     });

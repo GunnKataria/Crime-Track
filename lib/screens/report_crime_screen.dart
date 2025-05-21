@@ -239,7 +239,7 @@ class _ReportCrimeScreenState extends ConsumerState<ReportCrimeScreen> {
         return;
       }
       
-      // Combine date and time
+      
       final dateTime = DateTime(
         _selectedDate.year,
         _selectedDate.month,
@@ -258,12 +258,12 @@ class _ReportCrimeScreenState extends ConsumerState<ReportCrimeScreen> {
         location: _locationController.text.trim(),
         dateTime: dateTime,
         type: _selectedCrimeType,
-        status: 'pending_verification', // New status for verification
+        status: 'pending_verification', 
         reportedBy: user.id,
         evidenceIds: [],
         witnessIds: [],
         suspectIds: [],
-        latitude: 0.0, // Would be set from map in a real app
+        latitude: 0.0, 
         longitude: 0.0, // Would be set from map in a real app
         isAnonymous: _isAnonymous,
         createdAt: DateTime.now(),
@@ -288,7 +288,7 @@ class _ReportCrimeScreenState extends ConsumerState<ReportCrimeScreen> {
           fileName: _selectedFileName,
         );
         
-        // Add evidence
+        
         await ref.read(evidenceProvider.notifier).addEvidence(evidence);
         
         // Update crime with evidence ID

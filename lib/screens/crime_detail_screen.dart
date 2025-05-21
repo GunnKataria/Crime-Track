@@ -647,7 +647,7 @@ Color _getStatusColor(String status) {
   }
 }
 
-// Add this helper method which is referenced in the code but wasn't included
+
 String _getStatusText(String status) {
   switch (status) {
     case 'pending_verification':

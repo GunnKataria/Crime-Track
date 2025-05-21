@@ -48,7 +48,7 @@ class JsonStorageService {
   // Save data to local storage
   Future<void> _saveData(String key, String jsonData) async {
     if (kIsWeb) {
-      // For web, use localStorage via shared_preferences
+      // For web,  localStorage via shared_preferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(key, jsonData);
     } else {

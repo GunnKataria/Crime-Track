@@ -73,13 +73,13 @@ class _CrimeListScreenState extends ConsumerState<CrimeListScreen> {
         filteredCrimes = crimes.where((crime) => crime.status == 'insufficient_evidence').toList();
       }
     } else {
-      // Citizens can only see their own reports and public reports
+      
       filteredCrimes = crimes.where((crime) => 
         crime.reportedBy == user?.id || !crime.isAnonymous
       ).toList();
     }
     
-    // Then filter by status
+    
     if (_selectedFilter == 'open') {
       filteredCrimes = filteredCrimes.where((crime) => crime.status == 'open').toList();
     } else if (_selectedFilter == 'investigating') {
@@ -88,7 +88,7 @@ class _CrimeListScreenState extends ConsumerState<CrimeListScreen> {
       filteredCrimes = filteredCrimes.where((crime) => crime.status == 'closed').toList();
     }
     
-    // Then filter by search query
+    
     if (_searchQuery.isNotEmpty) {
       filteredCrimes = filteredCrimes.where((crime) => 
         crime.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
@@ -97,7 +97,7 @@ class _CrimeListScreenState extends ConsumerState<CrimeListScreen> {
       ).toList();
     }
     
-    // Sort by date (newest first)
+    
     filteredCrimes.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     
     return filteredCrimes;
@@ -264,7 +264,7 @@ class _CrimeListScreenState extends ConsumerState<CrimeListScreen> {
                       return CrimeListItem(
                         crime: crime,
                         onTap: () {
-                          // For pending verification cases, go to verification screen
+                          
                           if (isOfficer && crime.status == 'pending_verification') {
                             Navigator.push(
                               context,
@@ -273,7 +273,7 @@ class _CrimeListScreenState extends ConsumerState<CrimeListScreen> {
                               ),
                             );
                           } else {
-                            // For other cases, go to detail screen
+                            
                             Navigator.push(
                               context,
                               MaterialPageRoute(

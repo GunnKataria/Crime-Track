@@ -32,8 +32,7 @@ class AuthNotifier extends StateNotifier<User?> {
   }
 
   Future<bool> login(String email, String password) async {
-    // In a real app, you would validate the password
-    // Here we're just checking if the user exists with the given email
+    
     final users = await _storageService.loadUsers();
     final userJson = users.firstWhere(
       (user) => user['email'] == email,
